@@ -2,7 +2,7 @@
   import 'constants/colors.dart';
 
   void main() async {
-    runApp(MainPage());
+    runApp(MaterialApp(home: MainPage()));
   }
 
   class NavItem {
@@ -63,7 +63,12 @@
           currentIndex: _index,
           items: _navItems.map((item) {
             return BottomNavigationBarItem(icon: Icon(item.activeIcon), label: item.label);
-          }).toList()
+          }).toList(),
+          selectedItemColor: AppColors.primaryBlue,
+          unselectedItemColor: Colors.grey,
+          selectedFontSize: 15,
+          unselectedFontSize: 15,
+          type: BottomNavigationBarType.fixed,
         ),
         body: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
