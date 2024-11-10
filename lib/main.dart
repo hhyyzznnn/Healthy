@@ -1,4 +1,8 @@
   import 'package:flutter/material.dart';
+import 'package:healthy/presentation/screens/diet.dart';
+import 'package:healthy/presentation/screens/home.dart';
+import 'package:healthy/presentation/screens/profile.dart';
+import 'package:healthy/presentation/screens/work_out.dart';
   import 'constants/colors.dart';
 
   void main() async {
@@ -73,7 +77,12 @@
         body: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _tabController,
-          children: const [],
+          children: const [
+            HomeScreen(),
+            WorkoutScreen(),
+            DietScreen(),
+            ProfileScreen()
+          ],
         )
       );
     }
