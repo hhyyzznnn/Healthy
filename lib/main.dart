@@ -18,8 +18,8 @@ class NavItem {
 
 const _navItems = [
   NavItem(activeIcon: Icons.home, label: "홈"),
-  NavItem(activeIcon: Icons.restaurant, label: "식단"),
   NavItem(activeIcon: Icons.fitness_center, label: "운동"),
+  NavItem(activeIcon: Icons.restaurant, label: "식단"),
   NavItem(activeIcon: Icons.person, label: "프로필")
 ];
 
@@ -57,20 +57,25 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: (int index) {
-            _tabController.animateTo(index);
-          },
-          currentIndex: _index,
-          items: _navItems.map((item) {
-            return BottomNavigationBarItem(
-                icon: Icon(item.activeIcon), label: item.label);
-          }).toList(),
-          selectedItemColor: AppColors.primaryBlue,
-          unselectedItemColor: Colors.grey,
-          selectedFontSize: 15,
-          unselectedFontSize: 15,
-          type: BottomNavigationBarType.fixed,
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            splashFactory: NoSplash.splashFactory
+          ),
+          child: BottomNavigationBar(
+            onTap: (int index) {
+              _tabController.animateTo(index);
+            },
+            currentIndex: _index,
+            items: _navItems.map((item) {
+              return BottomNavigationBarItem(
+                  icon: Icon(item.activeIcon), label: item.label);
+            }).toList(),
+            selectedItemColor: AppColors.primaryBlue,
+            unselectedItemColor: Colors.grey,
+            selectedFontSize: 15,
+            unselectedFontSize: 15,
+            type: BottomNavigationBarType.fixed,
+          ),
         ),
         body: TabBarView(
           physics: const NeverScrollableScrollPhysics(),

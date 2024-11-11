@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:healthy/constants/app_bar.dart';
 import 'package:healthy/constants/colors.dart';
+import 'notification.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: buildAppBar(
-          title: '홈',
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: IconButton(
+      backgroundColor: Colors.white,
+      appBar: buildAppBar(title: '헬띠', actions: [
+        Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: IconButton(
                 icon: Icon(Icons.notifications, color: Colors.white),
                 onPressed: () {
-                  // 알림 버튼 기능 추가
-                }
-              ),
-            )
-          ]
-      ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NotificationsScreen()));
+                }))
+      ]),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -42,32 +42,38 @@ class HomeScreen extends StatelessWidget {
               children: [
                 _buildStatCard('칼로리 섭취', '1500/2000kcal', Icons.local_fire_department),
                 _buildStatCard('운동 시간', '30/60분', Icons.fitness_center),
-                _buildStatCard('체중 변화', '70kg', Icons.monitor_weight),
+                _buildStatCard('체중 변화', '70kg', Icons.monitor_weight)
               ],
             ),
 
             // 빠른 기록 버튼
             const SizedBox(height: 24),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // 식단 추가 페이지로 이동
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryBlue,
+                SizedBox(
+                  width: size.width * 0.45,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // 식단 추가 페이지로 이동
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBlue,
+                    ),
+                    child: const Text('식단 추가하기', style: TextStyle(color: Colors.white)),
                   ),
-                  child: const Text('식단 추가하기'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // 운동 추가 페이지로 이동
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryBlue,
+                SizedBox(
+                  width: size.width * 0.45,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // 운동 추가 페이지로 이동
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBlue,
+                    ),
+                    child: const Text('운동 추가하기', style: TextStyle(color: Colors.white)),
                   ),
-                  child: const Text('운동 추가하기'),
                 ),
               ],
             ),
@@ -117,7 +123,8 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
               Text(value, style: const TextStyle(fontSize: 14)),

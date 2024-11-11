@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthy/constants/app_bar.dart';
 import 'package:healthy/constants/colors.dart';
+import 'setting.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -14,6 +15,7 @@ class ProfileScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
             },
           ),
         ],
