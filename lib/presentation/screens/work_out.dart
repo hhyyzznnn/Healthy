@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:healthy/constants/app_bar.dart';
 import 'package:healthy/constants/colors.dart';
+import 'work_out/work_out_selection.dart';
+import 'work_out/work_out_detail.dart';
 
 class WorkoutScreen extends StatelessWidget {
   const WorkoutScreen({super.key});
@@ -40,9 +42,7 @@ class WorkoutScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () {
-                        // 운동 시작하기 페이지로 이동
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryBlue,
                       ),
