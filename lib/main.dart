@@ -5,8 +5,21 @@ import 'package:healthy/presentation/screens/profile.dart';
 import 'package:healthy/presentation/screens/work_out.dart';
 import 'constants/colors.dart';
 
-void main() async {
-  runApp(MaterialApp(home: MainPage()));
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: '헬띠',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const MainPage(),
+    );
+  }
 }
 
 class NavItem {
@@ -44,7 +57,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _tabController.removeListener(tabListener);
-
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -54,38 +67,45 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
   }
 
+  void navigateToTab(int index) {
+    _tabController.animateTo(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            splashFactory: NoSplash.splashFactory
-          ),
-          child: BottomNavigationBar(
-            onTap: (int index) {
-              _tabController.animateTo(index);
-            },
-            currentIndex: _index,
-            items: _navItems.map((item) {
-              return BottomNavigationBarItem(
-                  icon: Icon(item.activeIcon), label: item.label);
-            }).toList(),
-            selectedItemColor: AppColors.primaryBlue,
-            unselectedItemColor: Colors.grey,
-            selectedFontSize: 15,
-            unselectedFontSize: 15,
-            type: BottomNavigationBarType.fixed,
-          ),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashFactory: NoSplash.splashFactory,
         ),
-        body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: _tabController,
-          children: const [
-            HomeScreen(),
-            WorkoutScreen(),
-            DietScreen(),
-            ProfileScreen()
-          ],
-        ));
+        child: BottomNavigationBar(
+          onTap: (int index) {
+            _tabController.animateTo(index);
+          },
+          currentIndex: _index,
+          items: _navItems.map((item) {
+            return BottomNavigationBarItem(
+              icon: Icon(item.activeIcon),
+              label: item.label,
+            );
+          }).toList(),
+          selectedItemColor: AppColors.primaryBlue,
+          unselectedItemColor: Colors.grey,
+          selectedFontSize: 15,
+          unselectedFontSize: 15,
+          type: BottomNavigationBarType.fixed,
+        ),
+      ),
+      body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _tabController,
+        children: [
+          HomeScreen(onNavigateToTab: navigateToTab),
+          const WorkoutScreen(),
+          const DietScreen(),
+          const ProfileScreen(),
+        ],
+      ),
+    );
   }
 }

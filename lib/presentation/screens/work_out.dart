@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:healthy/constants/app_bar.dart';
 import 'package:healthy/constants/colors.dart';
-import 'work_out/work_out_selection.dart';
-import 'work_out/work_out_detail.dart';
+import 'work_out/routine_selection.dart';
 
-class WorkoutScreen extends StatelessWidget {
+class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
+
+  @override
+  State<WorkoutScreen> createState() => _WorkoutScreenState();
+}
+
+class _WorkoutScreenState extends State<WorkoutScreen> {
+  String selectedRoutine = '가슴, 어깨, 삼두'; // 기본 루틴
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +22,29 @@ class WorkoutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 오늘의 루틴 선택 버튼
+            ElevatedButton(
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RoutineSelectionScreen(),
+                  ),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    selectedRoutine = result;
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBlue,
+              ),
+              child: const Text('오늘의 루틴 선택'),
+            ),
+            const SizedBox(height: 16),
+
             // 운동 상태 요약 카드
             Card(
               color: Colors.grey[900],
@@ -27,9 +56,9 @@ class WorkoutScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      '운동 부위: 가슴, 어깨, 삼두',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    Text(
+                      '운동 부위: $selectedRoutine',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const SizedBox(height: 8),
                     Row(

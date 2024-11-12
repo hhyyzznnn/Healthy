@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:healthy/constants/app_bar.dart';
-import 'package:healthy/constants/colors.dart';
+import 'diet/add_meal.dart';
 
-class DietScreen extends StatelessWidget {
+class DietScreen extends StatefulWidget {
   const DietScreen({super.key});
+
+  @override
+  State<DietScreen> createState() => _DietScreenState();
+}
+
+class _DietScreenState extends State<DietScreen> {
+  Map<String, int> mealCalories = {
+    "아침": 0,
+    "점심": 0,
+    "저녁": 0,
+    "간식": 0,
+  };
+
+  void updateMealCalories(String mealType, int calories) {
+    setState(() {
+      mealCalories[mealType] = calories;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,56 +32,41 @@ class DietScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 오늘의 칼로리 상태
             const Text(
-              '오늘 하루',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              height: 120,
-              color: Colors.grey[200], // 데모용 그래프 영역
-              child: const Center(child: Text('칼로리 상태 그래프')),
+              "오늘의 식단",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            // 식사 기록 박스
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                children: [
-                  _buildMealBox('아침', Icons.breakfast_dining),
-                  _buildMealBox('점심', Icons.lunch_dining),
-                  _buildMealBox('저녁', Icons.dinner_dining),
-                  _buildMealBox('간식', Icons.icecream),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+            ...mealCalories.entries.map((entry) {
+              String mealType = entry.key;
+              int calories = entry.value;
+              return Card(
+                elevation: 2,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  title: Text(mealType, style: const TextStyle(fontSize: 20)),
+                  subtitle: Text(
+                    calories > 0 ? "총 칼로리: $calories kcal" : "칼로리 정보 없음",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  trailing: ElevatedButton(
+                    onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddMealScreen(mealType: mealType),
+                        ),
+                      );
 
-  Widget _buildMealBox(String mealType, IconData icon) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 40, color: AppColors.primaryBlue),
-            const SizedBox(height: 8),
-            Text(
-              mealType,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text('추가하기', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      if (result != null) {
+                        updateMealCalories(mealType, result);
+                      }
+                    },
+                    child: const Text("추가"),
+                  ),
+                ),
+              );
+            })
           ],
         ),
       ),
