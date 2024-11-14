@@ -1,20 +1,41 @@
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  final String initialUserName;
+  final String initialGoal;
+  final String initialDietPlan;
+
+  const SettingsScreen({
+    super.key,
+    required this.initialUserName,
+    required this.initialGoal,
+    required this.initialDietPlan,
+  });
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String _selectedGoal = '체중 감량';
-  String _dietPlan = '';
-  String _userName = '';
-  String _profileImage = 'assets/default_profile.png'; // 기본 프로필 이미지 경로
+  late String _selectedGoal;
+  late String _dietPlan;
+  late String _userName;
+  String _profileImage = 'assets/default_profile.jpeg';
 
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _dietPlanController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기값 설정
+    _selectedGoal = widget.initialGoal;
+    _dietPlan = widget.initialDietPlan;
+    _userName = widget.initialUserName;
+
+    _userNameController.text = _userName;
+    _dietPlanController.text = _dietPlan;
+  }
 
   @override
   void dispose() {
@@ -39,7 +60,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Center(
               child: GestureDetector(
                 onTap: () {
-                  // 프로필 사진 변경 기능 추가 예정
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('프로필 사진 변경 기능 구현 필요')),
                   );
@@ -106,10 +126,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // 설정 저장 로직 추가
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('설정이 저장되었습니다.')),
-                  );
+                  // 설정 값을 반환
+                  Navigator.pop(context, {
+                    'name': _userName,
+                    'goal': _selectedGoal,
+                    'dietPlan': _dietPlan,
+                  });
                 },
                 child: const Text('저장'),
               ),

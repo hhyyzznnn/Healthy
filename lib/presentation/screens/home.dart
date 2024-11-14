@@ -37,18 +37,17 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text('오늘의 목표: 2000kcal 섭취, 60분 운동'),
-
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard('칼로리 섭취', '1500/2000kcal',
-                    Icons.local_fire_department),
-                _buildStatCard('운동 시간', '30/60분', Icons.fitness_center),
-                _buildStatCard('체중 변화', '70kg', Icons.monitor_weight)
+                _buildStatCard(context,
+                    '칼로리 섭취', '1500/2000kcal', Icons.local_fire_department),
+                _buildStatCard(context, '운동 시간', '30/60분', Icons.fitness_center),
+                _buildStatCard(context, '체중 변화', '70kg', Icons.monitor_weight)
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -56,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                   width: size.width * 0.45,
                   child: ElevatedButton(
                     onPressed: () {
-                      onNavigateToTab(1); // WorkoutScreen 탭으로 이동
+                      onNavigateToTab(1);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryBlue,
@@ -69,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                   width: size.width * 0.45,
                   child: ElevatedButton(
                     onPressed: () {
-                      onNavigateToTab(2); // DietScreen 탭으로 이동
+                      onNavigateToTab(2);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryBlue,
@@ -108,24 +107,29 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon) {
+  Widget _buildStatCard(BuildContext context,String title, String value, IconData icon) {
+    final size = MediaQuery.of(context).size;
     return Expanded(
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: AppColors.primaryBlue, size: 40),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style:
-                const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              Text(value, style: const TextStyle(fontSize: 14)),
-            ],
+          child: SizedBox(
+            width: size.width * 0.3,
+            height: size.height * 0.15,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: AppColors.primaryBlue, size: 40),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style:
+                      const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(value, style: const TextStyle(fontSize: 14))
+              ],
+            ),
           ),
         ),
       ),

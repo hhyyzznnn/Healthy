@@ -54,7 +54,8 @@ class _DietScreenState extends State<DietScreen> {
                       final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddMealScreen(mealType: mealType),
+                          builder: (context) =>
+                              AddMealScreen(mealType: mealType),
                         ),
                       );
 
