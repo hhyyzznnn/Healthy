@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:healthy/constants/app_bar.dart';
 import 'setting.dart';
 
@@ -15,6 +16,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String dietPlan = '1일 3식 균형 식단';
 
   @override
+  void initState() {
+    super.initState();
+    _loadUserSettings(); // 앱 시작 시 사용자 설정 로드
+  }
+
+  Future<void> _loadUserSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('userName') ?? '사용자 이름';
+      userGoal = prefs.getString('goal') ?? '체중 감량';
+      dietPlan = prefs.getString('dietPlan') ?? '1일 3식 균형 식단';
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(
@@ -23,24 +39,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
             onPressed: () async {
-              final result = await Navigator.push(
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingsScreen(
-                    initialUserName: userName,
-                    initialGoal: userGoal,
-                    initialDietPlan: dietPlan,
-                  ),
+                  builder: (context) => const SettingsScreen(),
                 ),
               );
-
-              if (result != null) {
-                setState(() {
-                  userName = result['name'] ?? userName;
-                  userGoal = result['goal'] ?? userGoal;
-                  dietPlan = result['dietPlan'] ?? dietPlan;
-                });
-              }
+              // 돌아온 후 설정값 다시 로드
+              await _loadUserSettings();
             },
           ),
         ],
@@ -53,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60,
-                backgroundImage: const AssetImage('assets/images/profile.jpg'),
+                backgroundImage: const AssetImage('assets/default_profile.jpeg'),
                 backgroundColor: Colors.grey[300],
               ),
               const SizedBox(height: 16),

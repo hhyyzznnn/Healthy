@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final String initialUserName;
-  final String initialGoal;
-  final String initialDietPlan;
-
-  const SettingsScreen({
-    super.key,
-    required this.initialUserName,
-    required this.initialGoal,
-    required this.initialDietPlan,
-  });
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -28,13 +20,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    // 초기값 설정
-    _selectedGoal = widget.initialGoal;
-    _dietPlan = widget.initialDietPlan;
-    _userName = widget.initialUserName;
+    _loadSettings();
+  }
 
-    _userNameController.text = _userName;
-    _dietPlanController.text = _dietPlan;
+  Future<void> _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userName = prefs.getString('userName') ?? '사용자 이름';
+      _selectedGoal = prefs.getString('goal') ?? '체중 감량';
+      _dietPlan = prefs.getString('dietPlan') ?? '1일 3식 균형 식단';
+
+      _userNameController.text = _userName;
+      _dietPlanController.text = _dietPlan;
+    });
+  }
+
+  Future<void> _saveSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', _userName);
+    await prefs.setString('goal', _selectedGoal);
+    await prefs.setString('dietPlan', _dietPlan);
   }
 
   @override
@@ -56,7 +61,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 프로필 사진
             Center(
               child: GestureDetector(
                 onTap: () {
@@ -71,8 +75,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // 사용자 이름 입력
             TextFormField(
               controller: _userNameController,
               decoration: const InputDecoration(
@@ -86,8 +88,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 20),
-
-            // 운동 목표 선택
             const Text('운동 목표'),
             DropdownButton<String>(
               isExpanded: true,
@@ -106,8 +106,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 20),
-
-            // 식단 계획 입력
             TextFormField(
               controller: _dietPlanController,
               decoration: const InputDecoration(
@@ -121,12 +119,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 30),
-
-            // 저장 버튼
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // 설정 값을 반환
+                onPressed: () async {
+                  await _saveSettings(); // SharedPreferences에 설정 저장
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('설정이 저장되었습니다.')),
+                  );
+                  // 저장 후 ProfileScreen으로 값 반환
                   Navigator.pop(context, {
                     'name': _userName,
                     'goal': _selectedGoal,
